@@ -1,24 +1,33 @@
 import express from 'express';
-import userRoutes from './user.js'
+import mongoose from 'mongoose';
+import userRoutes from './routes/users.js';
+import marineAnimalRoutes from './routes/marineAnimals.js';
+import authRoutes from './routes/auth.js';
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
-app.use(bodyParser.json());
+// Middleware
+app.use(express.json());
 
-app.use("/users", userRoutes)
+// Conexión a MongoDB
+mongoose.connect('mongodb://localhost:27017/marine-api', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('Conectado a MongoDB'))
+.catch(err => console.error('Error de conexión:', err));
 
+// Rutas
+app.use('/api/users', userRoutes);
+app.use('/api/marine-animals', marineAnimalRoutes);
+app.use('/api/auth', authRoutes);
+
+// Ruta raíz
 app.get('/', (req, res) => {
-    console.log('[GET ROUTE]');
-    res.send('Hello World!');
+    res.send('API de Animales Marinos y Usuarios');
 });
 
 app.listen(port, () => {
-    console.log(`Corriendo en: http://localhost:${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-
-
-
-
-
-

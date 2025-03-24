@@ -324,9 +324,3 @@ curl http://localhost:3000/api/users
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{"name":"Pulpo Común","species":"Octopus vulgaris","habitat":"Océanos y mares","lifespan":2}' http://localhost:3000/api/marine-animals
 ```
-
-## Notas Importantes
-
-- Los IDs en las respuestas (_id) son generados automáticamente por MongoDB y serán diferentes en cada ejecución.
-- La autenticación utiliza JWT con una clave secreta simple (secret_key). Para producción, usa una clave más segura y guárdala en variables de entorno.
-- Este ejemplo no incluye middleware de autenticación en las rutas protegidas. Para implementar protección, puedes añadir un middleware que verifique el token JWT en las solicitudes.

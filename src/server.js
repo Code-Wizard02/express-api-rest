@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/users.js';
 import marineAnimalRoutes from './routes/marineAnimals.js';
 import authRoutes from './routes/auth.js';
+import studentRoutes from './routes/students.js';
 
 const app = express();
 const port = 3000;
@@ -22,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/marine-api', {
 app.use('/api/users', userRoutes);
 app.use('/api/marine-animals', marineAnimalRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {

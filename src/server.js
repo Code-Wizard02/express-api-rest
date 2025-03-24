@@ -1,9 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRoutes from './routes/users.js';
-import marineAnimalRoutes from './routes/marineAnimals.js';
-import authRoutes from './routes/auth.js';
-import studentRoutes from './routes/students.js';
+import userRoutes from './routes/Users.routes.js';
+import authRoutes from './routes/Auth.routes.js';
+import productRoutes from './routes/Products.routes.js';
 
 const app = express();
 const port = 3000;
@@ -12,7 +11,7 @@ const port = 3000;
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect('mongodb://localhost:27017/marine-api', {
+mongoose.connect('mongodb://127.0.0.1:27017/productos', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -21,13 +20,12 @@ mongoose.connect('mongodb://localhost:27017/marine-api', {
 
 // Rutas
 app.use('/api/users', userRoutes);
-app.use('/api/marine-animals', marineAnimalRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/students', studentRoutes);
+app.use('/api/products', productRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {
-    res.send('API de Animales Marinos y Usuarios');
+    res.send('API de Productos');
 });
 
 app.listen(port, () => {

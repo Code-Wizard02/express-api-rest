@@ -160,7 +160,7 @@ nodemon server.js
 {
     "nombre": "Jane Updated"
 }
-apellido``
+
 - **Respuesta**:
 ```json
 {
@@ -245,7 +245,7 @@ apellido``
 
 #### Actualizar Producto
 
-- **Método**: PUT
+- **Método**: PATCH
 - **Endpoint**: /api/products/:id
 - **Cuerpo**:
 

@@ -9,8 +9,8 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
     try {
         const user = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
             email: req.body.email,
             password: req.body.password
         });
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Credenciales inválidas' });
 
         const token = jwt.sign({ id: user._id }, 'secret_key', { expiresIn: '1h' });
-        res.json({ token, user: { id: user._id, firstName: user.firstName, email: user.email } });
+        res.json({ token, user: { id: user._id, nombre: user.nombre, email: user.email } });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

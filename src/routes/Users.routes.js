@@ -1,13 +1,15 @@
 import express from 'express';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
+import authMiddleware from './middleware/Auth.middleware.js';
 
 const router = express.Router();
+router.use(authMiddleware)
 
 // GET - Obtener todos los usuarios
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find().select('-password'); // Excluye la contraseña
+        const users = await User.find().select('-password');
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -21,7 +23,7 @@ router.post('/', async (req, res) => {
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             email: req.body.email,
-            password: req.body.password // Se hashea automáticamente
+            password: req.body.password
         });
         const savedUser = await user.save();
         res.status(201).json({ message: `${savedUser.nombre} fue agregado a la base de datos` });
@@ -46,7 +48,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-        res.json({ message: `${user.nombre} borrado de la base de datos exitoso` });
+        res.json({ message: `${user.nombre} fue borrado de la base de datos exitoso` });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -62,7 +64,7 @@ router.patch('/:id', async (req, res) => {
             email: req.body.email,
             password: req.body.password
         });
-        res.json({ message: `User with the ${userId} fue actualizado` });
+        res.json({ message: `El usuario con la id: ${userId} fue actualizado` });
     } catch (error) {
         console.dir(error, {depth: null});
         res.status(400).json({ message: error.message });

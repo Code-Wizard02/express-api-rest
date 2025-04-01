@@ -1,7 +1,9 @@
 import express from "express";
 import Product from "../models/Product.js";
+import authMiddleware from "./middleware/Auth.middleware.js"; 
 
 const router = express.Router();
+router.use(authMiddleware);
 
 // GET - Obtener todos los productos
 router.get("/", async (req, res) => {
@@ -23,7 +25,10 @@ router.post("/", async (req, res) => {
             stock: req.body.stock,
         });
         const savedProduct = await product.save();
-        res.status(201).json({ message: `${savedProduct.nombre} fue agregado a la base de datos` });
+        res.status(201).json({ 
+            product: savedProduct,
+            message: `${savedProduct.nombre} fue agregado a la base de datos`,  
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -68,5 +73,7 @@ router.patch("/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 
 export default router;

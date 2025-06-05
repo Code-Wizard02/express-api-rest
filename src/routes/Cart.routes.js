@@ -40,16 +40,25 @@ router.post('/add', authMiddleware, verificarRol('comprador'), async (req, res) 
     }
 });
 
-// Eliminar producto del carrito
 router.delete('/:productId', authMiddleware, verificarRol('comprador'), async (req, res) => {
     try {
         const cart = await Cart.findOne({ comprador: req.user.id });
         if (!cart) return res.status(404).json({ message: 'Carrito no encontrado' });
 
-        cart.productos = cart.productos.filter(item => item.producto.toString() !== req.params.productId);
-        await cart.save();
+        const index = cart.productos.findIndex(
+            item => item.producto.toString() === req.params.productId
+        );
 
-        res.json({ message: 'Producto eliminado del carrito' });
+        if (index === -1) return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+
+        if (cart.productos[index].cantidad > 1) {
+            cart.productos[index].cantidad -= 1;
+        } else {
+            cart.productos.splice(index, 1);
+        }
+
+        await cart.save();
+        res.json({ message: 'Producto actualizado correctamente' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

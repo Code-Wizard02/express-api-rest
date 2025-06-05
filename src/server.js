@@ -6,15 +6,18 @@ import productRoutes from './routes/Products.routes.js';
 import cartRoutes from './routes/Cart.routes.js';
 import paypalRoutes from './routes/PayPal.routes.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/productos')
-    .then(() => console.log('Conectado a MongoDB'))
-    .catch(err => console.error('Error de conexión:', err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Conectado a MongoDB Atlas'))
+  .catch(err => console.error('❌ Error de conexión:', err));
 
 // Rutas
 app.get('/', (req, res) => { res.send('API de Productos') });

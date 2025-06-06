@@ -16,8 +16,8 @@ app.use(express.json());
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ Conectado a MongoDB Atlas'))
-  .catch(err => console.error('❌ Error de conexión:', err));
+    .then(() => console.log('✅ Conectado a MongoDB Atlas'))
+    .catch(err => console.error('❌ Error de conexión:', err));
 
 // Rutas
 app.get('/', (req, res) => { res.send('API de Productos') });

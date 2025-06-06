@@ -73,4 +73,38 @@ router.post('/capture-order', authMiddleware, verificarRol('comprador'), async (
     }
 });
 
+router.post('/validate-payment', authMiddleware, verificarRol('comprador'), async (req, res) => {
+    const { orderID } = req.body;
+
+    try {
+        // Validar que la orden existe en PayPal
+        const request = new paypal.orders.OrdersCaptureRequest(orderID);
+        request.requestBody({});
+
+        const capture = await paypalClient().execute(request);
+
+        // Verificar que el pago fue exitoso
+        if (capture.result.status !== 'COMPLETED') {
+            return res.status(400).json({ message: 'El pago no fue exitoso' });
+        }
+
+        // Obtener el carrito del comprador
+        const cart = await Cart.findOne({ comprador: req.user.id });
+        if (!cart || cart.productos.length === 0) {
+            return res.status(400).json({ message: 'Carrito vacío' });
+        }
+
+        // Marcar el carrito como pagado y vaciarlo
+        await Cart.findOneAndUpdate(
+            { comprador: req.user.id },
+            { $set: { pagado: true, productos: [] } }
+        );
+
+        res.status(200).json({ message: 'Pago validado exitosamente, carrito vacío' });
+    } catch (error) {
+        console.error('🛑 Error al validar el pago:', error);
+        res.status(500).json({ message: 'Error al procesar el pago', error: error.message });
+    }
+});
+
 export default router;
